@@ -1,0 +1,386 @@
+import React, { useState, useRef, useEffect } from "react";
+import { ChevronDown, User, Settings, LogOut } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
+export default function Dashboard() {
+  const [selectedMaterial, setSelectedMaterial] = useState("");
+  const [selectedMixto, setSelectedMixto] = useState("");
+  const [cantidad, setCantidad] = useState("");
+  const [metodoPago, setMetodoPago] = useState("");
+  const [precio, setPrecio] = useState(0);
+  const [pedidos, setPedidos] = useState([]);
+  const [queja, setQueja] = useState("");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [nombreUsuario, setNombreUsuario] = useState(
+    localStorage.getItem("nombreUsuario") || "Administrador"
+  );
+  const [nuevoNombre, setNuevoNombre] = useState(nombreUsuario);
+  const [showEditar, setShowEditar] = useState(false);
+  const [showConfig, setShowConfig] = useState(false);
+  const [mensaje, setMensaje] = useState("");
+
+  const navigate = useNavigate();
+
+  // Refs para navegación interna
+  const inicioRef = useRef(null);
+  const materialesRef = useRef(null);
+  const pedidosRef = useRef(null);
+  const contactoRef = useRef(null);
+  const quejasRef = useRef(null);
+
+  const materiales = [
+    { nombre: "Plástico", precio: 2000 },
+    { nombre: "Cartón", precio: 1500 },
+    { nombre: "Vidrio", precio: 1000 },
+    { nombre: "Metal", precio: 2500 },
+    { nombre: "Papel", precio: 1200 },
+  ];
+
+  useEffect(() => {
+    let total = 0;
+    const material = materiales.find((m) => m.nombre === selectedMaterial);
+    if (material && cantidad) {
+      total = material.precio * cantidad;
+    } else if (selectedMixto && cantidad) {
+      const mixtos = {
+        "Cartón y Plástico": 1800,
+        "Vidrio y Metal": 2200,
+        "Papel y Cartón": 1400,
+      };
+      total = mixtos[selectedMixto] * cantidad;
+    }
+    setPrecio(total);
+  }, [selectedMaterial, selectedMixto, cantidad]);
+
+  const scrollToSection = (ref) => {
+    ref.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleProveedorClick = () => {
+    alert("✅ Su solicitud para ser proveedor ha sido enviada correctamente.");
+  };
+
+  const handleConfirmarPedido = () => {
+    if (!cantidad || (!selectedMaterial && !selectedMixto) || !metodoPago) {
+      alert("⚠️ Por favor complete todos los campos antes de confirmar el pedido.");
+      return;
+    }
+
+    const nuevoPedido = {
+      id: pedidos.length + 1,
+      material: selectedMaterial || selectedMixto,
+      cantidad,
+      total: precio,
+      fecha: new Date().toLocaleDateString(),
+      metodoPago,
+    };
+
+    setPedidos([...pedidos, nuevoPedido]);
+    alert("✅ Su pedido ha sido realizado con éxito.");
+    setSelectedMaterial("");
+    setSelectedMixto("");
+    setCantidad("");
+    setMetodoPago("");
+    setPrecio(0);
+  };
+
+  const handleEnviarQueja = () => {
+    if (!queja.trim()) {
+      alert("⚠️ Por favor escriba su queja o reclamo.");
+      return;
+    }
+    alert("✅ Su queja o reclamo ha sido enviada.");
+    setQueja("");
+  };
+
+  const handleDescargar = (pedido) => {
+    const contenido = `
+🧾 COMPROBANTE DE PEDIDO ECOSOFT
+Fecha: ${pedido.fecha}
+Material: ${pedido.material}
+Cantidad: ${pedido.cantidad} kg
+Total: $${pedido.total.toLocaleString()}
+Método de Pago: ${pedido.metodoPago}
+`;
+    const blob = new Blob([contenido], { type: "text/plain;charset=utf-8" });
+    const enlace = document.createElement("a");
+    enlace.href = URL.createObjectURL(blob);
+    enlace.download = `Comprobante_Pedido_${pedido.id}.txt`;
+    enlace.click();
+  };
+
+  const handleEditProfile = () => {
+    setShowEditar(true);
+    setIsMenuOpen(false);
+  };
+
+  const handleSettings = () => {
+    setShowConfig(true);
+    setIsMenuOpen(false);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("nombreUsuario");
+    alert("👋 Sesión cerrada correctamente.");
+    navigate("/");
+  };
+
+  const handleGuardarCambios = () => {
+    if (nuevoNombre.trim() === "") {
+      alert("⚠️ El nombre no puede estar vacío.");
+      return;
+    }
+    localStorage.setItem("nombreUsuario", nuevoNombre);
+    setNombreUsuario(nuevoNombre);
+    setShowEditar(false);
+    setMensaje("✅ Cambios guardados correctamente.");
+    setTimeout(() => setMensaje(""), 3000);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100">
+      {/* HEADER */}
+      <header className="bg-white flex justify-between items-center px-8 py-4 shadow-md rounded-b-3xl">
+        <h1 className="text-3xl font-extrabold text-green-700 tracking-wide">EC♻️SOFT</h1>
+
+        {/* Menú desplegable */}
+        <div className="relative">
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="flex items-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-lg shadow-md transition-colors"
+          >
+            {nombreUsuario}
+            <ChevronDown className={`w-4 h-4 transition-transform ${isMenuOpen ? "rotate-180" : ""}`} />
+          </button>
+
+          {isMenuOpen && (
+            <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+              <button
+                onClick={handleEditProfile}
+                className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-emerald-50 transition-colors text-left"
+              >
+                <User className="w-5 h-5" />
+                <span className="font-medium">Editar Perfil</span>
+              </button>
+              <button
+                onClick={handleSettings}
+                className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-emerald-50 transition-colors text-left"
+              >
+                <Settings className="w-5 h-5" />
+                <span className="font-medium">Configuración</span>
+              </button>
+              <div className="border-t border-gray-200 my-2"></div>
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 transition-colors text-left"
+              >
+                <LogOut className="w-5 h-5" />
+                <span className="font-medium">Cerrar Sesión</span>
+              </button>
+            </div>
+          )}
+        </div>
+      </header>
+
+      {mensaje && (
+        <div className="text-center bg-green-100 text-green-700 p-2 font-semibold">{mensaje}</div>
+      )}
+
+      {/* MATERIALES */}
+      <section ref={materialesRef} className="p-8">
+        <h2 className="text-2xl font-bold text-emerald-700 mb-4">♻️ Materiales Disponibles</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {materiales.map((m, index) => (
+            <div
+              key={index}
+              className="bg-white rounded-2xl shadow-md p-6 hover:scale-105 transition-transform"
+            >
+              <h3 className="text-xl font-semibold text-gray-800">{m.nombre}</h3>
+              <p className="text-gray-600 mt-2">💰 Precio por kg: ${m.precio}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* REALIZAR PEDIDO */}
+      <section ref={pedidosRef} className="p-8 bg-emerald-50 rounded-3xl mx-6 shadow-md">
+        <h2 className="text-2xl font-bold text-emerald-700 mb-4 text-center">🛒 Realizar Pedido</h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <select
+            className="p-3 rounded-lg border border-gray-300"
+            value={selectedMaterial}
+            onChange={(e) => setSelectedMaterial(e.target.value)}
+          >
+            <option value="">Seleccionar material</option>
+            {materiales.map((m) => (
+              <option key={m.nombre} value={m.nombre}>
+                {m.nombre}
+              </option>
+            ))}
+          </select>
+
+          <select
+            className="p-3 rounded-lg border border-gray-300"
+            value={selectedMixto}
+            onChange={(e) => setSelectedMixto(e.target.value)}
+          >
+            <option value="">Seleccionar material mixto</option>
+            <option value="Cartón y Plástico">Cartón y Plástico</option>
+            <option value="Vidrio y Metal">Vidrio y Metal</option>
+            <option value="Papel y Cartón">Papel y Cartón</option>
+          </select>
+
+          <input
+            type="number"
+            placeholder="Cantidad (kg)"
+            className="p-3 rounded-lg border border-gray-300"
+            value={cantidad}
+            onChange={(e) => setCantidad(e.target.value)}
+          />
+
+          <select
+            className="p-3 rounded-lg border border-gray-300"
+            value={metodoPago}
+            onChange={(e) => setMetodoPago(e.target.value)}
+          >
+            <option value="">Método de pago</option>
+            <option value="Efectivo">Efectivo</option>
+            <option value="Transferencia">Transferencia</option>
+          </select>
+        </div>
+
+        <div className="text-center mt-6 text-lg font-semibold text-gray-700">
+          Total: ${precio.toLocaleString()}
+        </div>
+
+        <div className="flex justify-center mt-6">
+          <button
+            onClick={handleConfirmarPedido}
+            className="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition"
+          >
+            Confirmar Pedido
+          </button>
+        </div>
+      </section>
+
+      {/* TABLA DE PEDIDOS */}
+      <section className="p-8">
+        <h2 className="text-2xl font-bold text-emerald-700 mb-4">📋 Historial de Pedidos</h2>
+        {pedidos.length === 0 ? (
+          <p className="text-gray-600">Aún no hay pedidos registrados.</p>
+        ) : (
+          <table className="min-w-full bg-white rounded-2xl shadow-md overflow-hidden">
+            <thead className="bg-emerald-600 text-white">
+              <tr>
+                <th className="py-2 px-4 text-left">ID</th>
+                <th className="py-2 px-4 text-left">Material</th>
+                <th className="py-2 px-4 text-left">Cantidad (kg)</th>
+                <th className="py-2 px-4 text-left">Total</th>
+                <th className="py-2 px-4 text-left">Fecha</th>
+                <th className="py-2 px-4 text-left">Descargar</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pedidos.map((pedido) => (
+                <tr key={pedido.id} className="border-b hover:bg-gray-50">
+                  <td className="py-2 px-4">{pedido.id}</td>
+                  <td className="py-2 px-4">{pedido.material}</td>
+                  <td className="py-2 px-4">{pedido.cantidad}</td>
+                  <td className="py-2 px-4">${pedido.total.toLocaleString()}</td>
+                  <td className="py-2 px-4">{pedido.fecha}</td>
+                  <td className="py-2 px-4">
+                    <button
+                      onClick={() => handleDescargar(pedido)}
+                      className="text-emerald-600 font-semibold hover:underline"
+                    >
+                      Descargar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </section>
+
+      {/* QUEJAS */}
+      <section ref={quejasRef} className="p-8 bg-white rounded-3xl shadow-md mx-6 mb-10">
+        <h2 className="text-2xl font-bold text-emerald-700 mb-4 text-center">📢 Quejas o Reclamos</h2>
+        <textarea
+          className="w-full p-4 border rounded-lg mb-4"
+          placeholder="Escriba su queja o reclamo aquí..."
+          rows="4"
+          value={queja}
+          onChange={(e) => setQueja(e.target.value)}
+        />
+        <div className="flex justify-center">
+          <button
+            onClick={handleEnviarQueja}
+            className="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition"
+          >
+            Enviar Queja
+          </button>
+        </div>
+      </section>
+
+      {/* BOTÓN PROVEEDOR */}
+      <div className="flex justify-center pb-10">
+        <button
+          onClick={handleProveedorClick}
+          className="bg-green-700 text-white px-8 py-3 rounded-full hover:bg-green-800 transition font-semibold shadow-md"
+        >
+          🏭 Quiero ser proveedor
+        </button>
+      </div>
+
+      {/* MODALES */}
+      {showEditar && (
+        <div className="fixed inset-0 flex justify-center items-center bg-black/50 z-50">
+          <div className="bg-white rounded-2xl p-8 w-[400px] shadow-lg">
+            <h2 className="text-2xl font-bold text-emerald-700 mb-4 text-center">Editar Perfil</h2>
+            <input
+              type="text"
+              value={nuevoNombre}
+              onChange={(e) => setNuevoNombre(e.target.value)}
+              className="w-full border p-3 rounded-lg mb-4"
+              placeholder="Nuevo nombre"
+            />
+            <div className="flex justify-between">
+              <button
+                onClick={handleGuardarCambios}
+                className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition"
+              >
+                Guardar
+              </button>
+              <button
+                onClick={() => setShowEditar(false)}
+                className="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showConfig && (
+        <div className="fixed inset-0 flex justify-center items-center bg-black/50 z-50">
+          <div className="bg-white rounded-2xl p-8 w-[400px] shadow-lg">
+            <h2 className="text-2xl font-bold text-emerald-700 mb-4 text-center">Configuración</h2>
+            <p className="text-gray-700 mb-4">Usuario: <strong>{nombreUsuario}</strong></p>
+            <p className="text-gray-700">Versión: 1.0.0</p>
+            <div className="flex justify-center mt-6">
+              <button
+                onClick={() => setShowConfig(false)}
+                className="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
