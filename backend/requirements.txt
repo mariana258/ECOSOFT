@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+sqlalchemy>=1.4
+pymysql
+python-dotenv
+redis
+passlib[bcrypt]
+pydantic
+typing-extensions
+python-jose[cryptography]
+python-multipart
