@@ -1,0 +1,96 @@
+Proceso Personal de Software
+
+Acerca de este repositorio
+
+Repositorio para almacenar mis soluciones a las tareas del Proceso Personal de Software (PSP).
+
+Materiales utilizados para las tareas del PSP
+
+PSP: Un Proceso de Automejora para Ingenieros de Software;
+
+Cuerpo de Conocimiento del Proceso Personal de Software, Versión 2.0
+
+Material de Autoaprendizaje del PSP
+
+Acerca del PSP (según Wikipedia)
+
+El Proceso Personal de Software (PSP) es un proceso estructurado de desarrollo de software diseñado para ayudar a los ingenieros de software a comprender mejor y mejorar su desempeño mediante el seguimiento del desarrollo de código previsto y real. El PSP fue creado por Watts Humphrey para aplicar los principios fundamentales del Modelo de Madurez de Capacidades (CMM) del Instituto de Ingeniería de Software (SEI) a las prácticas de desarrollo de software de un desarrollador individual. Su objetivo es proporcionar a los ingenieros de software las habilidades necesarias para trabajar en un equipo de desarrollo de software (TSP).
+
+Objetivos
+El PSP tiene como objetivo proporcionar a los ingenieros de software métodos disciplinados para mejorar sus procesos personales de desarrollo de software. El PSP ayuda a los ingenieros de software a:
+
+Mejorar sus habilidades de estimación y planificación.
+
+Adquirir compromisos que puedan cumplir.
+
+Gestionar la calidad de sus proyectos.
+
+Reducir el número de defectos en su trabajo.
+
+Estructura del PSP
+
+La formación en PSP sigue un enfoque de mejora progresiva: un ingeniero que aprende a integrar el PSP en su proceso comienza en el primer nivel (PSP0) y avanza en madurez del proceso hasta el nivel final (PSP2.1). Cada nivel cuenta con guiones detallados, listas de verificación y plantillas que guían al ingeniero a través de los pasos necesarios y le ayudan a mejorar su propio proceso de software. Humphrey anima a los ingenieros con experiencia a personalizar estos guiones y plantillas a medida que comprenden sus fortalezas y debilidades.
+
+Proceso
+
+La entrada del PSP son los requisitos; el documento de requisitos se completa y se entrega al ingeniero.
+
+PSP0, PSP0.1 (Introduce la disciplina y la medición del proceso)
+
+PSP0 tiene 3 fases: planificación, desarrollo (diseño, codificación, compilación y pruebas) y análisis post mortem. Se establece una línea base del proceso actual midiendo: tiempo dedicado a la programación, errores introducidos/eliminados y tamaño del programa. En un análisis post mortem, el ingeniero se asegura de que todos los datos de los proyectos se hayan registrado y analizado correctamente. PSP0.1 mejora el proceso añadiendo un estándar de codificación, una medición del tamaño y el desarrollo de un plan de mejora de procesos personal (PIP). En el PIP, el ingeniero registra ideas para mejorar su propio proceso.
+
+PSP1, PSP1.1 (Introduce la estimación y la planificación)
+Basándose en los datos de referencia recopilados en PSP0 y PSP0.1, el ingeniero estima el tamaño de un nuevo programa y prepara un informe de pruebas (PSP1). Los datos acumulados de proyectos anteriores se utilizan para estimar el tiempo total. En cada nuevo proyecto se registrará el tiempo real dedicado. Esta información se utiliza para la planificación y estimación de tareas y cronogramas (PSP1.1).
+
+PSP2, PSP2.1 (Introduce la gestión de la calidad y el diseño)
+PSP2 añade dos nuevas fases: revisión del diseño y revisión del código. La prevención y eliminación de defectos son el enfoque principal del PSP2. Los ingenieros aprenden a evaluar y mejorar sus procesos midiendo la duración de las tareas y la cantidad de defectos que introducen y eliminan en cada fase del desarrollo. Crean y utilizan listas de verificación para las revisiones de diseño y código. El PSP2.1 introduce técnicas de especificación y análisis de diseño.
+
+La importancia de los datos
+
+Uno de los aspectos fundamentales del PSP es el uso de datos históricos para analizar y mejorar el rendimiento del proceso. La recopilación de datos del PSP se apoya en cuatro elementos principales:
+
+Guiones.
+
+Medidas.
+
+Estándares.
+
+Formularios.
+
+Los guiones del PSP ofrecen orientación experta para seguir los pasos del proceso y proporcionan un marco para aplicar las medidas del PSP. El PSP cuenta con cuatro medidas principales:
+
+Tamaño: la medida del tamaño de una pieza del producto, como las líneas de código (LOC).
+
+Esfuerzo: el tiempo necesario para completar una tarea, generalmente registrado en minutos.
+
+Calidad: la cantidad de defectos en el producto.
+
+Cronograma: una medida del progreso del proyecto, comparada con las fechas de finalización planificadas y reales.
+
+La aplicación de estándares al proceso garantiza la precisión y consistencia de los datos. Estos se registran en formularios, generalmente mediante una herramienta de software PSP. El SEI ha desarrollado una herramienta PSP y también existen opciones de código abierto, como Process Dashboard. Los datos clave que recopila la herramienta PSP son: tiempo, defectos y tamaño (el tiempo invertido en cada fase; cuándo y dónde se introdujeron, detectaron y corrigieron los defectos; y el tamaño de las piezas del producto). Los desarrolladores de software utilizan muchas otras métricas derivadas de estas tres básicas para comprender y mejorar su rendimiento. Entre las métricas derivadas se incluyen:
+
+Precisión de la estimación (tamaño/tiempo)
+
+Intervalos de predicción (tamaño/tiempo)
+
+Distribución del tiempo en cada fase
+
+Distribución de la introducción de defectos
+
+Distribución de la eliminación de defectos
+
+Productividad
+
+Porcentaje de reutilización
+
+Índice de rendimiento de costes
+
+Valor planificado
+
+Valor ganado
+
+Valor ganado previsto
+
+Densidad de defectos
+Densidad de defectos por fase
+Defecto
